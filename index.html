@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+<canvas id="canvas" width="64" height="32"></canvas>
+<script src="chip8.js"></script>
+<script>
+// pong
+chip8.loadBase64("agJrDGw/bQyi6tq23NZuACLUZgNoAmBg8BXwBzAAEhrHF3cIaf+i8NZxourattzWYAHgoXv+YATgoXsCYB+LAtq2YAzgoX3+YA3goX0CYB+NAtzWovDWcYaEh5RgP4YCYR+HEkYCEnhGPxKCRx9p/0cAaQHWcRIqaAJjAYBwgLUSimj+YwqAcIDVPwESomECgBU/ARK6gBU/ARLIgBU/ARLCYCDwGCLUjjQi1GY+MwFmA2j+MwFoAhIWef9J/mn/Esh5AUkCaQFgBPAYdgFGQHb+Emyi8v4z8mXxKWQUZQDUVXQV8inUVQDugICAgICAgAAAAAAA");
+// brix
+//chip8.loadBase64("bgVlAGsGagCjDNqxegQ6QBIIewI7EhIGbCBtH6MQ3NEi9mAAYQCjEtARcAijDtARYEDwFfAHMAASNMYPZx5oAWn/ow7WcaMQ3NFgBOChfP5gBuChfAJgP4wC3NGjDtZxhoSHlGA/hgJhH4cSRx8SrEYAaAFGP2j/RwBpAdZxPwESqkcfEqpgBYB1PwASqmAB8BiAYGH8gBKjDNBxYP6JAyL2dQEi9kVgEt4SRmn/gGCAxT8BEsphAoAVPwES4IAVPwES7oAVPwES6GAg8BijDn7/gOCABGEA0BE+ABIwEt54/0j+aP8S7ngBSAJoAWAE8Bhp/xJwoxT1M/Jl8SljN2QA00VzBfIp00UA7uAAgAD8AKoAAAAAAA==");
+// test rom
+//chip8.loadBase64("Ek7qrKrqzqqqruCgoODAQEDg4CDA4OBgIOCg4CAgYEAgQOCA4ODgICAg4OCg4ODgIOBAoOCg4MCA4OCAwICgQKCgogLatADuogLatBPcaAFpBWoKawFlKmYrohbYtKI+2bSiAjYrogbatGsGohrYtKI+2bSiBkUqogLatGsLoh7YtKI+2bSiBlVgogLatGsQoibYtKI+2bSiBnb/RiqiAtq0axWiLti0oj7ZtKIGlWCiAtq0axqiMti0oj7ZtCJCaBdpG2ogawGiCti0ojbZtKIC2rRrBqIq2LSiCtm0ogaHUEcqogLatGsLoirYtKIO2bSiBmcqh7FHK6IC2rRrEKIq2LSiEtm0ogZmeGcfh2JHGKIC2rRrFaIq2LSiFtm0ogZmeGcfh2NHZ6IC2rRrGqIq2LSiGtm0ogZmjGeMh2RHGKIC2rRoLGkwajRrAaIq2LSiHtm0ogZmjGd4h2VH7KIC2rRrBqIq2LSiItm0ogZm4IZuRsCiAtq0awuiKti0ojbZtKIGZg+GZkYHogLatGsQojrYtKIe2bSj6GAAYTDxVaPp8GWiBkAwogLatGsVojrYtKIW2bSj6GaJ9jPyZaICMAGiBjEDogYyB6IG2rRrGqIO2LSiPtm0EkgT3A==");
+// test 2
+//chip8.loadBase64("EgpgAQDuYAISpgDgaDJrGqTx2LRoOqT12LRoAmkGagtrAWUqZiuktdi0pO3ZtKSlNiukodq0awakudi0pO3ZtKShRSqkpdq0awukvdi0pO3ZtKShVWCkpdq0axCkxdi0pO3ZtKShdv9GKqSl2rR7BaTN2LSk7dm0pKGVYKSl2rR7BaSt2LSk7dm0pKUSkKSh2rRoEmkWahtrAaSx2LSk7dm0YAAiAqSlQACkodq0ewWkqdi0pOHZtKSlQAKkoTAA2rR7BaTJ2LSkqdm0pKFlKmcAh1BHKqSl2rR7BaTJ2LSkrdm0pKFmC2cqh2FHK6Sl2rR7BaTJ2LSksdm0pKFmeGcfh2JHGKSl2rR7BaTJ2LSktdm0pKFmeGcfh2NHZ6Sl2rRoImkmaitrAaTJ2LSkudm0pKFmjGeMh2RHGKSl2rR7BaTJ2LSkvdm0pKFmjGd4h2VH7KSl2rR7BaTJ2LSkxdm0pKFmeGeMh2dH7KSl2rR7BaTJ2LSkwdm0pKFmD4ZmRgekpdq0ewWkydi0pOHZtKShZuCGbkbApKXatHsFpOXYtKTB2bSknvFlpKUwqqShMVWkodq0aDJpNmo7awGk5di0pL3ZtKSeYABhMPFVpJ7wZYEApJ/wZaSlMDCkoTEApKHatHsFpOXYtKS12bSknmaJ9jPyZaShMAEUMjEDFDIyBxQypJ5mQfYz8mWkoTAAFDIxBhQyMgUUMqSeZgT2M/JlpKEwABQyMQAUMjIEFDKkpdq0ewWk5di0pOHZtKShZgT2Htq0ewWk6di0pO3ZtKSlZv92CjYJpKGGZjYEpKFm/2AKhgQ2CaShhmY2BKShZv+GboZmNn+koYZmhm42fqShZgV29jb7pKFmBYYFNvukoWYFgGcw+6Sh2rQUnKpVAACgQKAAoMCA4KCg4MBAQODgIMDg4GAg4KDgICDgwCDAYIDg4OAgQEDg4KDg4OAgwECg4KDA4KDg4ICA4MCgoMDgwIDg4IDAgACgoECgQKCgCq6iQjgIMLg=");
+</script>
+<script>
+var keymap = {
+	"1": 0x1,
+	"2": 0x2,
+	"3": 0x3,
+	"4": 0xc,
+	"q": 0x4,
+	"w": 0x5,
+	"e": 0x6,
+	"r": 0xd,
+	"a": 0x7,
+	"s": 0x8,
+	"d": 0x9,
+	"f": 0xe,
+	"z": 0xa,
+	"x": 0x0,
+	"c": 0xb,
+	"v": 0xf
+};
+var canvas = document.querySelector("canvas");
+var ctx = canvas.getContext("2d");
+chip8.draw = function() {
+	for(var y=0; y<32; y++) {
+		for(var x=0; x<64; x++) {
+			var p = chip8.display[y*64+x];
+			var imageData = ctx.getImageData(0,0,64,32);
+			imageData.data[(y*64+x)*4+0] = p*255;
+			imageData.data[(y*64+x)*4+1] = p*255;
+			imageData.data[(y*64+x)*4+2] = p*255;
+			imageData.data[(y*64+x)*4+3] = 255;
+			ctx.putImageData(imageData,0,0);
+		}
+	}
+}
+addEventListener("keydown",function(e){
+	chip8.keypad[keymap[e.key]] = true;
+});
+addEventListener("keyup",function(e){
+	chip8.keypad[keymap[e.key]] = false;
+});
+setInterval(function(){
+	//for(var i=0;i<5;i++){chip8.step();};
+	//chip8.doFrame();
+	chip8.step();
+	//draw();
+},1);
+</script>
+</body>
+</html>
