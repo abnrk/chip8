@@ -7,7 +7,7 @@ chip8.st = 0x00;
 chip8.pc = 0x200;
 chip8.i = 0x00;
 chip8.display = new Uint8Array(64*32);
-chip8.keypad = {};
+chip8.keypad = new Uint8Array(0xf);
 chip8.cycles = 2;
 chip8.draw = function() {
 	// draw code goes here
@@ -16,7 +16,7 @@ chip8.step = function(){
 	var opcode = (this.mem[this.pc]<<8)+this.mem[this.pc+1];
 	var op_type = opcode>>12;
 	this.pc = (this.pc+2)%0x1000;
-	//console.log(opcode.toString(16).padStart(4,"0"));
+	console.log(this.pc,opcode.toString(16).padStart(4,"0"));
 	if(this.dt > 0) {
 		this.dt = (this.dt-1)&0xff
 	}
@@ -59,15 +59,12 @@ chip8.step = function(){
 	if(op_type == 0x7) {
 		this.reg[(opcode>>8)&0xf] += opcode&0xff;
 	}
-	if(op_type == 0x8) {
-		console.log("gubby this gubby that",opcode.toString(16),op_type == 0x8 && (opcode&0xf) == 0x1);
-	}
 	if(op_type == 0x8 && (opcode&0xf) == 0x0) {
-		console.log(opcode.toString(16));
+		//console.log(opcode.toString(16));
 		this.reg[(opcode>>8)&0xf] = this.reg[(opcode>>4)&0xf];
 	}
 	if(op_type == 0x8 && (opcode&0xf) == 0x1) {
-		console.log(opcode.toString(16).padStart(4,"0"),opcode);
+		//console.log(opcode.toString(16).padStart(4,"0"),opcode);
 		this.reg[(opcode>>8)&0xf] |= this.reg[(opcode>>4)&0xf];
 	}
 	if(op_type == 0x8 && (opcode&0xf) == 0x2) {
@@ -201,9 +198,6 @@ chip8.loadRom = function(data) {
 }
 chip8.loadBase64 = function(b64) {
 	this.loadRom(Uint8Array.fromBase64(b64));
-}
-for(var i=0; i<=0xf; i++) {
-	chip8.keypad[i] = false;
 }
 chip8.loadFont([
 0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
