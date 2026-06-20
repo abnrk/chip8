@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
+<script>
+// polyfill for goanna
+Uint8Array.fromBase64 = function(b64){
+	return new Uint8Array(Array.from(atob(b64)).map((x) => x.charCodeAt(0)));
+};
+</script>
 </head>
 <body>
 <canvas id="canvas" width="64" height="32" style="width: 256px; height:128px; image-rendering: pixelated;"></canvas>
