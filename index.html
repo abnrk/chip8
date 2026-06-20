@@ -40,6 +40,9 @@ var keymap = {
 };
 var canvas = document.querySelector("canvas");
 var ctx = canvas.getContext("2d");
+var audioCtx = new AudioContext();
+var gainNode = audioCtx.createGain();
+var oscillator = audioCtx.createOscillator();
 chip8.draw = function() {
 	for(var y=0; y<32; y++) {
 		for(var x=0; x<64; x++) {
@@ -53,6 +56,13 @@ chip8.draw = function() {
 		}
 	}
 }
+oscillator.type = "square";
+oscillator.frequency.setValueAtTime(500,audioCtx.currentTime); // value in hertz
+//oscillator.connect(audioCtx.destination);
+oscillator.connect(gainNode).connect(audioCtx.destination);
+addEventListener("click",function(e){
+	oscillator.start();
+});
 addEventListener("keydown",function(e){
 	chip8.keypad[keymap[e.key]] = 1;
 });
@@ -63,6 +73,11 @@ setInterval(function(){
 	//for(var i=0;i<5;i++){chip8.step();};
 	//chip8.doFrame();
 	chip8.step();
+	if(chip8.st != 0) {
+		gainNode.gain.value = 1;
+	} else {
+		gainNode.gain.value = 0;
+	}
 },1);
 </script>
 </body>
